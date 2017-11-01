@@ -1,0 +1,7 @@
+Name:""
+Money:0
+Distance:0
+First_aid_kit:0
+Potion:0
+Stethoscopes:0
+Scissors:0
