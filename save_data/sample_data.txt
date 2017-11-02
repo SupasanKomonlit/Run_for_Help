@@ -1,4 +1,4 @@
-Name:""
+Name:
 Money:0
 Distance:0
 First_aid_kit:0
