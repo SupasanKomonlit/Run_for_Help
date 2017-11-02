@@ -15,10 +15,10 @@ class Input_Character:
             upper_count += 1
             all_count += 1
     def return_chr(self,code,capital):
-        if capital in [1,8,9]:
-            return self.upper_dictionary[key]
+        if capital in [1,8,9,17,24,25]:
+            return self.upper_dictionary[code]
         else:
-            return self.lower_dictionary[key]
+            return self.lower_dictionary[code]
 
 if __name__=="__main__":
     start = Input_Character()

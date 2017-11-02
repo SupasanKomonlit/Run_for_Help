@@ -22,7 +22,8 @@ class Game_Window(arcade.Window):
         self.hight = height
         self.current_state = "set up game"
         self.point = 1
-        self.in
+        self.input = Input_Character()
+        self.name = ""
 
     def update(self, data):
         None
@@ -32,7 +33,11 @@ class Game_Window(arcade.Window):
         if self.current_state == "set up game":
             self.set_up_game()
         elif self.current_state == "set name":
-            
+            self.set_name()
+
+    def set_name(self):
+        arcade.draw_text("Your name",self.width/2,self.hight/2+30, arcade.color.ALABAMA_CRIMSON,30,anchor_x="center",anchor_y="center",align="center")
+        arcade.draw_text(self.name,self.width/2,self.hight/2-30, arcade.color.AZURE, 30, anchor_x = "center", anchor_y = "center", align="center")
 
     def set_up_game(self):
         arcade.draw_text("New Game",self.width/2,self.hight/2+80,arcade.color.RED,20,anchor_x="center",anchor_y="center",align="center")
@@ -62,6 +67,13 @@ class Game_Window(arcade.Window):
                     None
                 elif self.point == 3:
                     None
+        elif self.current_state == "set name":
+            if key in range(97,123):
+                self.name += self.input.return_chr(key,key_modifiers)
+            elif key in [65288,65535] and len(self.name) != 0:
+                self.name = self.name[:len(self.name)-1]
+            elif key == 65293:
+                self.current_state = "game running"
             
 if __name__=="__main__":
     window = Game_Window(SCREEN_WIDTH, SCREEN_HIGHT)
