@@ -1,13 +1,19 @@
 import arcade, arcade.key, time
+
 from input_data import Input_Character
-SCREEN_WIDTH = 800
+from detail_of_map import Map
+
+SCREEN_WIDTH = 1200
 SCREEN_HIGHT = 600
 
 class Game_Character(arcade.Sprite):
     def __init__(self, *array_data, **dictionary_data):
-        None
+        self.human = dictionary_data.pop("human",None)
+        super().__init__(*array_data, **dictionary_data)
 
     def sync_with_model(self):
+        if self.human:
+            self.set_position(self.human.pos_x, self.human.pos_y)
         None
 
     def draw(self):
@@ -34,6 +40,19 @@ class Game_Window(arcade.Window):
             self.set_up_game()
         elif self.current_state == "set name":
             self.set_name()
+        elif self.current_state == "set game":
+            self.set_game()
+            self.current_state = "game running"
+        elif self.current_state == "game running":
+            self.game_running()
+
+    def game_running(self):
+        self.map.draw_road()
+        self.human.draw() 
+
+    def set_game(self):
+        self.map = Map(self, self.width, self.hight)
+        self.human = Game_Character("images/human_01_100.png",human=self.map.human)
 
     def set_name(self):
         arcade.draw_text("Your name",self.width/2,self.hight/2+30, arcade.color.ALABAMA_CRIMSON,30,anchor_x="center",anchor_y="center",align="center")
@@ -73,7 +92,7 @@ class Game_Window(arcade.Window):
             elif key in [65288,65535] and len(self.name) != 0:
                 self.name = self.name[:len(self.name)-1]
             elif key == 65293:
-                self.current_state = "game running"
+                self.current_state = "set game"
             
 if __name__=="__main__":
     window = Game_Window(SCREEN_WIDTH, SCREEN_HIGHT)
