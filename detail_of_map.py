@@ -8,7 +8,7 @@ class Map:
         self.main = main_program
         self.level = 1
 #        self.human = Main_Character(self,40, 60)
-        self.human = Main_Character(self,40, 140)
+        self.human = Main_Character(self,40, 150)
 #        self.human = Main_Character(self,40, 190)
 
     def draw_road(self):

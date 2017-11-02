@@ -31,28 +31,47 @@ class Game_Window(arcade.Window):
         self.input = Input_Character()
         self.name = ""
 
-    def update(self, data):
-        None
-
+    def update(self, delta):
+        if self.current_state == "game running":
+            self.current_time = time.time()
+            self.different_time = self.current_time - self.start_time
+            if self.different_time < 0.2:
+                if self.human_sprite.human.pos_y == 210:
+                    self.human_sprite = Game_Character("images/human_01_80.png", human = self.human_sprite.human)
+                elif self.human_sprite.human.pos_y == 150:
+                    self.human_sprite = Game_Character("images/human_01_100.png", human = self.human_sprite.human)
+                elif self.human_sprite.human.pos_y == 70:
+                    self.human_sprite = Game_Character("images/human_01_120.png", human = self.human_sprite.human)
+            elif self.different_time < 0.5:
+                if self.human_sprite.human.pos_y == 210:
+                    self.human_sprite = Game_Character("images/human_02_80.png", human = self.human_sprite.human)
+                elif self.human_sprite.human.pos_y == 150:
+                    self.human_sprite = Game_Character("images/human_02_100.png", human = self.human_sprite.human)
+                elif self.human_sprite.human.pos_y == 70:
+                    self.human_sprite = Game_Character("images/human_02_120.png", human = self.human_sprite.human)
+            else:
+                self.start_time = time.time()
+    
     def on_draw(self):
         arcade.start_render()
         if self.current_state == "set up game":
             self.set_up_game()
         elif self.current_state == "set name":
             self.set_name()
-        elif self.current_state == "set game":
-            self.set_game()
-            self.current_state = "game running"
+#        elif self.current_state == "set game":
+#            self.set_game()
+#            self.current_state = "game running"
         elif self.current_state == "game running":
             self.game_running()
 
     def game_running(self):
         self.map.draw_road()
-        self.human.draw() 
+        self.human_sprite.draw() 
 
     def set_game(self):
         self.map = Map(self, self.width, self.hight)
-        self.human = Game_Character("images/human_01_100.png",human=self.map.human)
+        self.human_sprite = Game_Character("images/human_01_100.png",human=self.map.human)
+        self.start_time = time.time()
 
     def set_name(self):
         arcade.draw_text("Your name",self.width/2,self.hight/2+30, arcade.color.ALABAMA_CRIMSON,30,anchor_x="center",anchor_y="center",align="center")
@@ -92,7 +111,20 @@ class Game_Window(arcade.Window):
             elif key in [65288,65535] and len(self.name) != 0:
                 self.name = self.name[:len(self.name)-1]
             elif key == 65293:
-                self.current_state = "set game"
+#                self.current_state = "set game"
+                self.set_game()
+                self.current_state = "game running"
+        elif self.current_state == "game running":
+            if key == 65364:
+                if self.human_sprite.human.pos_y == 210:
+                    self.human_sprite.human.pos_y = 150
+                elif self.human_sprite.human.pos_y == 150:
+                    self.human_sprite.human.pos_y = 70
+            elif key == 65362:
+                if self.human_sprite.human.pos_y == 150:
+                    self.human_sprite.human.pos_y = 210
+                elif self.human_sprite.human.pos_y == 70:
+                    self.human_sprite.human.pos_y = 150
             
 if __name__=="__main__":
     window = Game_Window(SCREEN_WIDTH, SCREEN_HIGHT)
