@@ -36,6 +36,7 @@ class Game_Window(arcade.Window):
 
     def update(self, delta):
         if self.current_state == "game running":
+            self.map.random_building()
             self.current_time = time.time()
             self.different_human_time = self.current_time - self.human_time
             if self.different_human_time < 0.2:
@@ -81,6 +82,8 @@ class Game_Window(arcade.Window):
             self.game_running()
 
     def game_running(self):
+        self.map.draw_sky()
+        self.map.draw_building()
         self.map.draw_road()
         for draw_coin in self.coin_list.keys():
             self.coin_list[draw_coin].draw()

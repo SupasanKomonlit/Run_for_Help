@@ -1,3 +1,5 @@
+import arcade
+
 class Main_Character:
     def __init__(self, detail_map, pos_x, pos_y):
         self.pos_x = pos_x
@@ -32,3 +34,24 @@ class Coin:
 
 class Wood_Box:
     None
+
+class Building(arcade.Sprite):
+    def __init__(self, detail_map, location_picture, pos_x, pos_y, distance_x, building_id):
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.distance = distance_x
+        self.id = building_id
+        self.map = detail_map
+        self.finish = False
+        super().__init__(location_picture)
+    
+    def update(self):
+        if not self.finish:
+            self.pos_x -= self.map.level * 3
+            if self.pos_x < (-1)*self.distance:
+                self.finish = True
+            self.set_position(self.pos_x,self.pos_y)
+
+    def draw(self):
+        self.update()
+        super().draw()
