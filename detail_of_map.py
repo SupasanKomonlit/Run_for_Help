@@ -1,6 +1,6 @@
 import arcade, arcade.key, random
 
-from detail_of_character import Main_Character, Coin, Wood_Box, Building
+from detail_of_character import Main_Character, Coin, Wood, Building
 
 class Map:
     def __init__(self, main_program, width, hight):
@@ -17,6 +17,15 @@ class Map:
         self.current_building = 0
         self.max_building = False
         self.have_hospital = -1
+        self.potion = arcade.Sprite("images/potion.png")
+        self.first_aid_kit = arcade.Sprite("images/first_aid_kit.png")
+        self.scissors = arcade.Sprite("images/scissors.png")
+        self.stethoscopes = arcade.Sprite("images/stethoscopes.png")
+        self.potion.set_position(95,425)
+        self.first_aid_kit.set_position(882.5,425)
+        self.scissors.set_position(332.5,425)
+        self.stethoscopes.set_position(615,425)
+#95 332.5 615 882.5
 
     def draw_road(self):
         arcade.draw_line(0,10,self.width,10,arcade.color.YELLOW,3)
@@ -48,7 +57,6 @@ class Map:
                 self.count_building += 1
             if self.count_building == 13:
                 self.max_building = True
-
         else:
             if self.current_building == 0:
                 self.check_building = 12
@@ -57,31 +65,38 @@ class Map:
             if self.have_hospital == -1:
                 self.type_building = 3
                 self.have_hospital = 0
-            elif self.have_hospital == 0:
-                None
-            elif self.have_hospital < 8 or self.type_building ==3:
-                self.have_hospital += 1
-            else:
-                self.have_hospital = 0
+            elif self.have_hospital < 6:
+                if self.type_building == 3:
+                    self.type_building = 2
             if self.type_building == 1 and self.building_array[self.check_building].pos_x < self.width - self.building_array[self.check_building].distance:
                 self.building_array[self.current_building] = Building(self, "images/building_01.png", self.width+self.distance_x(self.type_building), self.distance_y(self.type_building), self.distance_x(self.type_building), self.current_building)
                 self.past_building = self.type_building
                 self.current_building += 1
+                self.have_hospital += 1
             elif self.type_building == 2 and self.building_array[self.check_building].pos_x < self.width - self.building_array[self.check_building].distance:
                 self.building_array[self.current_building] = Building(self, "images/building_02.png", self.width+self.distance_x(self.type_building), self.distance_y(self.type_building), self.distance_x(self.type_building), self.current_building)
                 self.past_building = self.type_building
                 self.current_building += 1
+                self.have_hospital += 1
             elif self.type_building == 4 and self.building_array[self.check_building].pos_x < self.width - self.building_array[self.check_building].distance and self.past_building != 4:
                 self.building_array[self.current_building] = Building(self, "images/seven.png", self.width+self.distance_x(self.type_building), self.distance_y(self.type_building), self.distance_x(self.type_building), self.current_building)
                 self.past_building = self.type_building
                 self.current_building += 1
+                self.have_hospital += 1
             elif self.type_building == 3 and self.building_array[self.check_building].pos_x < self.width - self.building_array[self.check_building].distance:
                 self.building_array[self.current_building] = Building(self, "images/hospital.png", self.width+self.distance_x(self.type_building), self.distance_y(self.type_building), self.distance_x(self.type_building), self.current_building)
                 self.past_building = self.type_building
                 self.current_building += 1
-                self.have_hospital = 1
+                self.have_hospital = 0
+                if self.level < 2:
+                    self.level += 0.5
+                elif self.level < 4:
+                    self.level += 0.3
+                else:
+                    self.level += 0.1
             if self.current_building == 13:
                 self.current_building = 0
+#            print(self.have_hospital)
             
     def distance_x(self, type_building):
         if type_building == 1:
@@ -107,11 +122,19 @@ class Map:
         for draw in range(len(self.building_array)):
             if not self.building_array[draw].finish:
                 self.building_array[draw].draw()
+
+    def draw_score(self):
+        None
     
     def set_coin(self, coin_id, lane):
         self.coin_01 = Coin(self,1260,50,coin_id, lane)
         self.coin_02 = Coin(self,1260,135,coin_id, lane)
         self.coin_03 = Coin(self,1260,200,coin_id, lane)
+    
+    def set_wood(self, wood_id, lane):
+        self.wood_01 = Wood(self,1260,50,wood_id, lane)
+        self.wood_02 = Wood(self,1260,135,wood_id, lane)
+        self.wood_03 = Wood(self,1260,200,wood_id, lane)
 
 #  picture building_01 140*201
 #  picture building_02 175*300
